@@ -6,7 +6,7 @@ def login():
             print('ログインを行います。')
             loginid = input('メールアドレスを入力してください。（半角英数字）>')
             loginidcheck = len (loginid)
-            if 1 <= loginidcheck <= 80:
+            if loginid.isalnum() and 1 <= loginidcheck <= 80:
                 break
             else:
                 print('入力が間違っています。もう一度入力してください。')
@@ -22,14 +22,13 @@ def login():
         logcus = "select (メールアドレス,ログインパスワード,id) from customers"
         rowslo = sql_execute(logcus)
 
-        sum3 = 0
+
         for log in rowslo:
             if loginid == log[0] and loginpass == log[1]:
-                sum3 = sum3 + 1
                 print('ログインに成功しました。ショッピングメニューに移動します。')
                 result = log[2]
                 logf = logf + 1
                 break
-        if sum3 == 0:
+        if logf == 0:
             print('ログインIDもしくはパスワードが違います。もう一度入力してください。')
     return result
