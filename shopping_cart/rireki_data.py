@@ -7,7 +7,7 @@ def data_rireki(zyutyuid):
     conn.commit()
     b = "select 受注明細.商品番号,受注ID,商品名,商品詳細,税込金額,税抜金額,数量,受注明細.販売単価,税込販売単価\
         from 受注明細 inner join 商品 on 受注明細.商品番号 = 商品.商品番号\
-        where 受注明細.削除フラグ = 0 and 受注ID = %s"
+        where 受注ID = %s"
     cur.execute(b,zyutyuid)
     zyutyu_meisai = cur.fetchall()
     conn.commit()

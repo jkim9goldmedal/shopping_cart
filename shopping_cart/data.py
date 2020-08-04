@@ -10,7 +10,7 @@ def data():
         where exists(\
             select *\
             from 受注明細情報一覧 B\
-            where A.商品番号 = B.商品番号 and A.販売単価 = B.販売単価 and A.受注日 = cast(now() as date))\
+            where A.商品番号 = B.商品番号 and A.販売単価 = B.販売単価 and date_format(A.受注日 , '%Y/%m/%d') = date_sub(date(date_format( now() , '%Y/%m/%d')),interval 1 day))\
         group by A.商品番号,A.販売単価\
         order by A.商品番号"
     cur.execute(a)
@@ -25,7 +25,7 @@ def data():
         sumnum = str(sumnum) + '個'
         sumtaxprice = str(sumtaxprice) + '円'
         sumprice = '(' + str(sumprice) + '円)'
-        price = '(' + str(price) + '円)'
+        price = str(price) + '円'
         column_list = [itemcode,name,namedet,price,sumnum,sumprice,sumtaxprice]
 
         data.append(column_list)

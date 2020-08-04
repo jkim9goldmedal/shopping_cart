@@ -8,7 +8,7 @@ def zyutyu_null_day():
     conn.commit()
     p = "select count(id)\
         from 受注\
-        where 受注日 = cast(now() as date)"
+        where date_format(受注日 , '%Y/%m/%d') = date_sub(date(date_format( now() , '%Y/%m/%d')),interval 1 day)"
     cur.execute(p)
     zyutyucount = cur.fetchall()
     conn.commit()

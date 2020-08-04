@@ -6,7 +6,7 @@ def zyutyu_null_month():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("USE shopping_cart")
     conn.commit()
-    p = "select count(id) from 受注 where DATE_FORMAT(受注日, '%Y/%m') = DATE_FORMAT(now(),'%Y/%m')"
+    p = "select count(id) from 受注 where DATE_FORMAT(受注日, '%Y%m') = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y%m')"
     cur.execute(p)
     zyutyucount = cur.fetchall()
     conn.commit()
