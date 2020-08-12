@@ -62,7 +62,7 @@ def search_show():
             conn.commit()
             b = "select 商品番号,商品名,商品詳細,税込販売単価,税抜販売単価,税込商品割引価格,税抜商品割引価格,税込カテゴリー割引価格,税抜カテゴリー割引価格,税込均一価格,税抜均一単価,在庫数,割引フラグ,商品カテゴリー番号\
                 from 商品在庫一覧\
-                where 商品カテゴリー番号 = %s and 在庫数 > 0"
+                where 商品カテゴリー番号 = %s and 在庫数 > 0 and 削除フラグ = 0"
 
 
             cur.execute(b,result)
@@ -96,7 +96,7 @@ def search_show():
                     #単品割引
 
                     import itemdis_hyouzi
-                    itemdis_hyouzi.itemdis_hyouzi()
+                    itemdis_hyouzi.itemdis_hyouzi(item_list)
             quitf = quitf + 1
             break
 
@@ -119,7 +119,7 @@ def search_show():
             conn.commit()
             c = "select 商品番号,商品名,商品詳細,税込販売単価,税抜販売単価,税込商品割引価格,税抜商品割引価格,税込カテゴリー割引価格,税抜カテゴリー割引価格,税込均一価格,税抜均一単価,在庫数,割引フラグ,商品カテゴリー番号\
                 from 商品在庫一覧\
-                where 商品名 like %s and 在庫数 > 0"
+                where 商品名 like %s and 在庫数 > 0 and 削除フラグ = 0"
 
             cur.execute(c,result)
             rows3 = cur.fetchall()
@@ -173,7 +173,7 @@ def search_show():
             conn.commit()
             d = "select 商品番号,商品名,商品詳細,税込販売単価,税抜販売単価,税込商品割引価格,税抜商品割引価格,税込カテゴリー割引価格,税抜カテゴリー割引価格,税込均一価格,税抜均一単価,在庫数,割引フラグ,商品カテゴリー番号\
                 from 商品在庫一覧\
-                where 商品詳細 like %s and 在庫数 > 0"
+                where 商品詳細 like %s and 在庫数 > 0 and 削除フラグ = 0"
             cur.execute(d,result)
             rows4 = cur.fetchall()
             conn.commit()

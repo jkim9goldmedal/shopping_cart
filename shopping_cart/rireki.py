@@ -7,7 +7,7 @@ def rireki(x):
     conn.commit()
     a = "select 受注.id,名前,受注日,受注.ログインID,税込合計金額,税抜合計金額,税込送料込合計額,税込配送料,税抜配送料\
         from 受注 inner join 顧客一覧 on 受注.ログインID = 顧客一覧.ログインID\
-        where 受注.削除フラグ = 0 and 受注.ログインID = %s"
+        where 受注.ログインID = %s"
     cur.execute(a,x)
     zyutyu = cur.fetchall()
     conn.commit()

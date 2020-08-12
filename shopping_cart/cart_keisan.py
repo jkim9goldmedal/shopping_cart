@@ -25,7 +25,7 @@ def keisan(x):
             cur.execute("USE shopping_cart")
             conn.commit()
             b = "select round(配送料*(1+(税率/100))),配送料,顧客一覧.ログインID\
-                from 顧客一覧 inner join 配送料 on 配送料ID = 配送料.id inner join 税率 on 税率ID = 税率.id\
+                from 顧客一覧 inner join 配送料一覧 on 顧客一覧.配送料管理番号 = 配送料一覧.配送料管理番号 inner join 税率一覧 on 配送料一覧.税率管理番号 = 税率一覧.税率管理番号\
                 where 顧客一覧.ログインID = %s"
             cur.execute(b,x)
             rows1 = cur.fetchall()

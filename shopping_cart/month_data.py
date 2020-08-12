@@ -14,8 +14,8 @@ def data_month():
         where exists(\
             select *\
             from 受注明細情報一覧 B\
-            where A.商品番号 = B.商品番号 and A.販売単価 = B.販売単価 and DATE_FORMAT(B.受注日, '%Y/%m') = DATE_FORMAT(now(),'%Y/%m'))\
-            and DATE_FORMAT(A.受注日, '%Y/%m') = DATE_FORMAT(now(),'%Y/%m')\
+            where A.商品番号 = B.商品番号 and A.販売単価 = B.販売単価 and DATE_FORMAT(A.受注日, '%Y%m') = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y%m'))\
+            and DATE_FORMAT(A.受注日, '%Y%m') = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y%m')\
         group by A.商品番号, A.販売単価\
         order by A.商品番号"
     cur.execute(a)

@@ -8,7 +8,7 @@ def hyouzi(x):
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("USE shopping_cart")
     conn.commit()
-    a = "select 名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料ID,メールアドレス,ログインID,ログインパスワード\
+    a = "select 名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード\
         from 【ログイン用】顧客一覧\
         where ログインID = %s"
 
@@ -29,7 +29,7 @@ def hyouzi(x):
         print('住所:' + cus_list[3])
         print('電話番号:' + cus_list[4])
         print('顧客ランク（1:有料会員　2:普通会員）:' + cus_list[5])
-        print('配送料ID（1:本州 2:離島）:' + str(cus_list[6]))
+        print('配送料管理番号:' + str(cus_list[6]))
         print('メールアドレス:' + cus_list[7])
         print('ログインID(変更不可):' + cus_list[8])
         print('ログインパスワード:' + cus_list[9])

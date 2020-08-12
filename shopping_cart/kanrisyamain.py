@@ -1,7 +1,7 @@
 def kanrisyazentai():
     stop = 0
     while stop < 1:
-        print('メニュー\n1:日ごとの売上一覧出力\n2:月ごとの売上一覧出力\n3:終了')
+        print('メニュー\n1:前日の売上一覧出力\n2:前月の売上一覧出力\n3:終了')
         menu = input('行いたい処理のメニュー番号を入力してください。（半角数字）>')
         if menu == '1':
             import zyutyunull_uriage

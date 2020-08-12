@@ -9,6 +9,7 @@ create table `カート`(
     `税抜価格` int not null, 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `カート` AUTO_INCREMENT = 1;
 
 drop table if exists `商品カテゴリー`;
 
@@ -16,13 +17,14 @@ create table `商品カテゴリー`(
     `id` int(11) not null auto_increment,
     `カテゴリー番号` int(11) not null,
     `カテゴリー` varchar(30) not null default '',
-    `税率ID` int(11) unsigned not null,
+    `税率管理番号` int(11) not null,
     `カテゴリー割引率` int(11) default null,
     `削除フラグ` varchar(10) not null default '0',
     `更新日時` datetime not null default current_timestamp,
     `備考` varchar(200) default null, 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `商品カテゴリー` AUTO_INCREMENT = 1;
 
 
 drop table if exists `受注明細`;
@@ -38,8 +40,10 @@ create table `受注明細`(
     `数量` int default null,
     `削除フラグ` varchar(10) default '0',
     `備考` varchar(100) default null,
+    `更新日時` datetime default current_timestamp,
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `受注明細` AUTO_INCREMENT = 1;
 
 drop table if exists `受注`;
 
@@ -57,32 +61,40 @@ create table `受注`(
     `入金確認済み` varchar(10) default '0',
     `備考` varchar(100) default null,
     `削除フラグ` varchar(10) default '0',
+    `更新日時` datetime not null default current_timestamp,
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `受注` AUTO_INCREMENT = 1;
 
 drop table if exists `配送料`;
 
 create table `配送料`(
     `id` int(11) not null auto_increment,
+    `配送料管理番号` int(11) not null,
     `配送料` int not null,
     `地域` varchar(40) not null,
     `削除フラグ` varchar(10) default '0', 
-    `税率ID` int(11) unsigned not null,
+    `税率管理番号` int(11) not null,
     `更新日時` datetime not null default current_timestamp,
     `備考` varchar(100) default null,
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `配送料` AUTO_INCREMENT = 1;
+
 
 drop table if exists `税率`;
 
 create table `税率`(
     `id` int(11) not null auto_increment,
+    `税率管理番号` int(11) not null,
     `税率` int(11) not null,
     `削除フラグ` varchar(10) not null default '0',
     `更新日時` datetime not null default current_timestamp,
     `備考` varchar(200) default null, 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `税率` AUTO_INCREMENT = 1;
+
 
 drop table if exists `在庫`;
 
@@ -95,6 +107,7 @@ create table `在庫`(
     `備考` varchar(200) default null, 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `在庫` AUTO_INCREMENT = 1;
 
 
 drop table if exists `顧客`;
@@ -106,7 +119,7 @@ create table `顧客`(
     `郵便番号` varchar(7) NOT NULL,
     `住所` varchar(100) NOT NULL,
     `電話番号` varchar(15) NOT NULL,
-    `配送料ID` int(11) not null,
+    `配送料管理番号` int(11) not null,
     `メールアドレス` varchar(80) not null,
     `ログインID` varchar(30) not null,
     `ログインパスワード` varchar(30) not null,
@@ -116,6 +129,7 @@ create table `顧客`(
     `備考` varchar(200) character set utf8 collate utf8_unicode_ci default '', 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `顧客` AUTO_INCREMENT = 1;
 
 drop table if exists `商品`;
 
@@ -134,6 +148,32 @@ create table `商品`(
     `備考` varchar(200) default null, 
     primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `商品` AUTO_INCREMENT = 1;
+
+drop view if exists 税率一覧;
+
+create view 税率一覧 as
+select
+    i1.id,
+    i1.税率管理番号,
+    i1.税率,
+    i1.更新日時,
+    i1.備考
+from
+    税率 as i1
+    inner join(
+        select
+            税率.税率管理番号 as f1,
+            max(税率.id) as f2
+        from
+            税率
+        group by
+            税率.税率管理番号
+    ) i2
+        on i2.f1 = i1.税率管理番号
+        and i2.f2 = i1.id;
+
+
 
 drop view if exists 商品カテゴリー一覧;
 
@@ -142,7 +182,7 @@ select
     i1.id,
     i1.カテゴリー番号,
     i1.カテゴリー,
-    i1.税率ID,
+    i1.税率管理番号,
     i1.カテゴリー割引率,
     i1.更新日時,
     i1.備考
@@ -174,10 +214,11 @@ select
     i1.郵便番号,
     i1.住所,
     i1.電話番号,
-    i1.配送料ID,
+    i1.配送料管理番号,
     i1.メールアドレス,
     i1.ログインID,
     i1.顧客ランク,
+    i1.削除フラグ,
     i1.備考
 from
     顧客 as i1
@@ -203,7 +244,7 @@ select
     i1.郵便番号,
     i1.住所,
     i1.電話番号,
-    i1.配送料ID,
+    i1.配送料管理番号,
     i1.メールアドレス,
     i1.ログインID,
     i1.ログインパスワード,
@@ -221,7 +262,9 @@ from
             顧客.ログインID
     ) i2
         on i2.f1 = i1.ログインID
-        and i2.f2 = i1.id;
+        and i2.f2 = i1.id
+where
+    i1.削除フラグ = 0;
 
 
 
@@ -278,21 +321,23 @@ drop view if exists 配送料一覧;
 create view 配送料一覧 as
 select
     i1.id,
+    i1.配送料管理番号,
     i1.地域,
     i1.更新日時,
-    i1.配送料
+    i1.配送料,
+    i1.税率管理番号
 from
     配送料 as i1
     inner join(
         select
-            配送料.地域 as f1,
+            配送料.配送料管理番号 as f1,
             max(配送料.id) as f2
         from
             配送料
         group by
-            配送料.地域
+            配送料.配送料管理番号
     ) i2
-        on i2.f1 = i1.地域
+        on i2.f1 = i1.配送料管理番号
         and i2.f2 = i1.id;
 
 drop view if exists 【入力ミス確認用】入出庫履歴;
@@ -354,33 +399,14 @@ select
     case when 割引フラグ = 3 then 均一単価 else 0 end as 税抜均一単価,
     税率,
     割引フラグ,
+    商品.削除フラグ,
     商品.備考
 from 
-    商品 left outer join 在庫 on 商品.商品番号 = 在庫.商品番号 left outer join 商品カテゴリー一覧 on 商品カテゴリー番号 = 商品カテゴリー一覧.カテゴリー番号 left outer join 税率 on 税率ID = 税率.id
-where
-    商品.削除フラグ = 0;
+    商品 left outer join 在庫 on 商品.商品番号 = 在庫.商品番号 left outer join 商品カテゴリー一覧 on 商品カテゴリー番号 = 商品カテゴリー一覧.カテゴリー番号 left outer join 税率一覧 on 商品カテゴリー一覧.税率管理番号 = 税率一覧.税率管理番号
+;
 
-drop view if exists 税率一覧;
 
-create view 税率一覧 as
-select
-    i1.id,
-    i1.税率,
-    i1.更新日時,
-    i1.備考
-from
-    税率 as i1
-    inner join(
-        select
-            税率.税率 as f1,
-            max(税率.id) as f2
-        from
-            税率
-        group by
-            税率.税率
-    ) i2
-        on i2.f1 = i1.税率
-        and i2.f2 = i1.id;
+
 
 
 
@@ -403,6 +429,7 @@ select
     i1.税抜均一単価,
     i1.税率,
     i1.割引フラグ,
+    i1.削除フラグ,
     i1.備考
 from
     【入力ミス確認用】商品一覧 as i1
@@ -441,6 +468,7 @@ select
     i1.税率,
     sum(在庫変動数) as 在庫数,
     i1.割引フラグ,
+    i1.削除フラグ,
     i1.備考
 from
     在庫 as i2 right outer join 商品情報一覧ビュー as i1 on i2.商品番号 = i1.商品番号
@@ -464,8 +492,6 @@ select
         ) as '8%消費税合計'
 from
     受注明細情報一覧 inner join 受注 on 受注ID = 受注.id inner join 商品在庫一覧 on 受注明細情報一覧.商品番号 = 商品在庫一覧.商品番号
-where
-    DATE_FORMAT(受注.受注日, '%Y/%m') = DATE_FORMAT(now(),'%Y/%m')
 group by
     受注.受注日;
 

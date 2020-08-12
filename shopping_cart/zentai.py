@@ -6,8 +6,8 @@ def shopping_cart():
         menu = input('行いたい処理のメニュー番号を入力してください。（半角数字）>')
         if menu == '1':#新規登録：済み
             print('===========')
-            import sinkitouroku
-            sinkitouroku.sinkitouroku()
+            import tourokunew
+            tourokunew.tourokunew()
             print('===========')
 
         elif menu == '2':#ログイン
@@ -44,7 +44,7 @@ def shopping_cart():
                         import search_show
                         search_show.search_show()
                         print('==========')
-                        sentaku = input('行いたい処理を選択してください。（1:カート追加に進む 2:メインメニューに戻る 3:終了する（ログアウト））>')
+                        sentaku = input('行いたい処理を選択してください。（1:カート追加・変更に進む\n2:メインメニューに戻ってショッピングを続ける\n3:終了する・ログアウト）>')
                         if sentaku == '1':#カート追加
                             stop3 = 0
                             while stop3 < 1:
@@ -54,7 +54,7 @@ def shopping_cart():
                                 import add_cart
                                 add_cart.add_cart(x)
                                 print('==========')
-                                sentaku2 = input('行いたい処理を選択してください。（1:カートの中身を表示する 2:このままカートに追加する 3:商品検索に戻る 4:メインメニューに戻る 5:終了する（ログアウト））>')
+                                sentaku2 = input('行いたい処理を選択してください。（1:カートの中身を表示する\n2:このままカートの追加・変更を行う\n3:商品検索に戻る\n4:メインメニューに戻ってショッピングを続ける\n5:終了する・ログアウト）>')
                                 if sentaku2 == '1':#購入予定明細：済み
                                     stop4 = 0
                                     while stop4 < 1:
@@ -71,23 +71,43 @@ def shopping_cart():
                                             import cart_meisai
                                             cart_meisai.cart_meisai(x)
                                             print('==========')
-                                            sentaku3 = input('行いたい処理を選択してください。（1:購入する 2:メインメニューに戻る 3:終了（ログアウト））')
+                                            sentaku3 = input('行いたい処理を選択してください。（1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト）>')
                                             if sentaku3 == '1':#購入する:済み
-                                                print('==========')
-                                                import meisai_text
-                                                meisai_text.meisai_text(x)
-                                                import cart_syori
-                                                cart_syori.cart_syori(x)
-                                                print('==========')
-                                                print('メインメニューに戻ります。')
+                                                import zaikocheck
+                                                check = zaikocheck.zaikocheck(x)
+
+                                                if check == 1:
+                                                    print('メインメニューに戻ります。')
+                                                    stop4 += 1
+                                                    stop3 += 1
+                                                    stop2 += 1
+
+                                                elif check == 0:
+                                                    print('==========')
+                                                    import meisai_text
+                                                    meisai_text.meisai_text(x)
+                                                    import cart_syori
+                                                    cart_syori.cart_syori(x)
+                                                    print('==========')
+                                                    print('メインメニューに戻ります。')
+                                                    stop4 += 1
+                                                    stop3 += 1
+                                                    stop2 += 1
+                                                # elif lastkaku == '2':
+                                                #     print('メインメニューに戻ります。カートの中身を確認後、もう一度購入してください。')
+                                                #     stop4 += 1
+                                                #     stop3 += 1
+                                                #     stop2 += 1
+                                                # else:
+                                                #     print('正しい数を入力してください。')
+                                            elif sentaku3 == '2':
+                                                stop4 += 1
+
+                                            elif sentaku3 == '3':#メインメニュー：済み
                                                 stop4 += 1
                                                 stop3 += 1
                                                 stop2 += 1
-                                            elif sentaku3 == '2':#メインメニュー：済み
-                                                stop4 += 1
-                                                stop3 += 1
-                                                stop2 += 1
-                                            elif sentaku3 == '3':#終了（ログアウト）:済み
+                                            elif sentaku3 == '4':#終了（ログアウト）:済み
                                                 import cartnull
                                                 y = cartnull.cartnull(x)
                                                 if y == ():
@@ -99,10 +119,10 @@ def shopping_cart():
                                                     stop1 += 1
                                                     break
                                                 else:
-                                                    print('終了します。（カート内の商品は削除。）')
+                                                    print('終了します。（カート内の商品は残っています。）')
                                                     print('==========')
-                                                    import cartdel
-                                                    cartdel.cartdel(x)
+
+
                                                     stop4 += 1
                                                     stop3 += 1
                                                     stop2 += 1
@@ -132,10 +152,10 @@ def shopping_cart():
                                         stop1 += 1
                                         break
                                     else:
-                                        print('終了します。（カート内の商品は削除。）')
+                                        print('終了します。（カート内の商品は残っています。）')
                                         print('==========')
-                                        import cartdel
-                                        cartdel.cartdel(x)
+
+
                                         stop3 += 1
                                         stop2 += 1
                                         stop1 += 1
@@ -157,9 +177,8 @@ def shopping_cart():
                                 break
 
                             else:#カートあり
-                                print('終了します。（カート内の商品は削除。）')
-                                import cartdel
-                                cartdel.cartdel(x)
+                                print('終了します。（カート内の商品は残っています。）')
+
                                 stop1 +=1
                                 break
 
@@ -177,42 +196,85 @@ def shopping_cart():
                             print('カート内に商品がありません。カートに追加してから実行してください。')
                             stop5 += 1
                         else:#商品あるとき：済み
+
                             print('==========')
                             import cart_meisai
                             cart_meisai.cart_meisai(x)
                             print('==========')
-                            sentaku3 = input('行いたい処理を選択してください。（1:購入する 2:メインメニューに戻る 3:終了（ログアウト））')
+                            sentaku3 = input('行いたい処理を選択してください。（1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト）>')
                             if sentaku3 == '1':#購入する:済み
-                                print('==========')
-                                import meisai_text
-                                meisai_text.meisai_text(x)
-                                import cart_syori
-                                cart_syori.cart_syori(x)
-                                print('購入が完了しました。')
-                                print('==========')
-                                print('メインメニューに戻ります。')
+                                import zaikocheck
+                                check = zaikocheck.zaikocheck(x)
+
+                                if check == 1:
+                                    print('メインメニューに戻ります。')
+                                    stop5 += 1
+
+                                elif check == 0:
+                                    print('==========')
+                                    import meisai_text
+                                    meisai_text.meisai_text(x)
+                                    import cart_syori
+                                    cart_syori.cart_syori(x)
+                                    print('購入が完了しました。')
+                                    print('==========')
+                                    print('メインメニューに戻ります。')
+                                    stop5 += 1
+
+                            elif sentaku3 == '2':
+                                stopstop = 0
+                                while stopstop < 1:
+                                    print('==========')
+                                    import cartnull_addcart
+                                    cartnull_addcart.cartnull_add(x)
+                                    import add_cart
+                                    add_cart.add_cart(x)
+                                    print('==========')
+                                    sentaku2 = input('行いたい処理を選択してください。（1:カートの中身を表示する\n2:もう一度商品を追加する\n3:メインメニューに戻ってショッピングを続ける\n4:終了する（ログアウト））>')
+                                    if sentaku2 == '1':
+                                        stopstop += 1
+                                    elif sentaku2 == '2':
+                                        print('もう一度商品を追加してください。')
+                                    elif sentaku2 == '3':
+                                        stopstop += 1
+                                        stop5 += 1
+                                    elif sentaku2 == '4':
+                                        import cartnull
+                                        y = cartnull.cartnull(x)
+                                        if y == ():
+                                            print('終了します。（カートに商品なし。）')
+                                            print('==========')
+                                            stopstop += 1
+                                            stop5 += 1
+
+                                            stop1 += 1
+                                            break
+                                        else:
+                                            print('終了します。（カート内の商品は残っています。）')
+                                            print('==========')
+                                            stopstop += 1
+
+                                            stop5 += 1
+
+                                            stop1 += 1
+                                            break
+
+                            elif sentaku3 == '3':#メインメニュー：済み
                                 stop5 += 1
 
-                            elif sentaku3 == '2':#メインメニュー：済み
-                                stop5 += 1
-
-                            elif sentaku3 == '3':#終了（ログアウト）:済み
+                            elif sentaku3 == '4':#終了（ログアウト）:済み
                                 import cartnull
                                 y = cartnull.cartnull(x)
                                 if y == ():
                                     print('終了します。（カートに商品なし。）')
                                     print('==========')
                                     stop5 += 1
-
                                     stop1 += 1
                                     break
                                 else:
-                                    print('終了します。（カート内の商品は削除。）')
+                                    print('終了します。（カート内の商品は残っています。）')
                                     print('==========')
-                                    import cartdel
-                                    cartdel.cartdel(x)
                                     stop5 += 1
-
                                     stop1 += 1
                                     break
                             else:#入力エラー：済み
@@ -245,10 +307,9 @@ def shopping_cart():
                         print('==========')
                         break
                     else:
-                        print('終了します。（カート内の商品は削除。）')
+                        print('終了します。（カート内の商品は残っています。）')
                         print('==========')
-                        import cartdel
-                        cartdel.cartdel(x)
+
                         stop1 += 1
                         break
                 else:#入力エラー：済み

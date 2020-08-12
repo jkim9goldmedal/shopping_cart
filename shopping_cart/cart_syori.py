@@ -7,6 +7,7 @@ def cart_syori(x):
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("USE shopping_cart")
     conn.commit()
+
     uriage = "insert into 受注(ログインID,受注日,税込合計金額,税抜合計金額,税込送料込合計額,注文合計数,税込配送料,税抜配送料)\
         values(%s,cast(now() as date),%s,%s,%s,%s,%s,%s)"
 

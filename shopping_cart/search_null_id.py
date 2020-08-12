@@ -8,7 +8,7 @@ def search_null_id(result):
 
     c = "select count(商品番号)\
         from 商品在庫一覧\
-        where 商品カテゴリー番号 = %s and 在庫数 > 0"
+        where 商品カテゴリー番号 = %s and 在庫数 > 0 and 削除フラグ = 0"
     cur.execute(c,result)
     rows3 = cur.fetchall()
     conn.commit()

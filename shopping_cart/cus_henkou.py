@@ -8,7 +8,7 @@ def henkou(x):
         cur = conn.cursor(pymysql.cursors.DictCursor)
         cur.execute("USE shopping_cart")
         conn.commit()
-        a = "select id,名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料ID,メールアドレス,ログインID,ログインパスワード\
+        a = "select id,名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード\
             from 【ログイン用】顧客一覧\
             where ログインID = %s"
 
@@ -39,7 +39,7 @@ def henkou(x):
         # henkounaiyou = input('変更後の内容を入力してください。>')
 
         while True:
-            henkou = input('変更したい項目を入力してください。\n1:名前\n2:カナ\n3:郵便番号\n4:住所\n5:電話番号\n6:顧客ランク\n7:配送料ID\n8:メールアドレス\n9:ログインパスワード\n>')
+            henkou = input('変更したい項目を入力してください。\n1:名前\n2:カナ\n3:郵便番号\n4:住所\n5:電話番号\n6:顧客ランク\n7:配送料管理番号\n8:メールアドレス\n9:ログインパスワード\n>')
             if henkou == '1':
                 name = input('名前（40文字以内）>')
                 checkname = len(name)
@@ -139,18 +139,42 @@ def henkou(x):
                         print('入力しなおしてください。')
             elif henkou == '7':
                 try:
-                    haisouryou = int(input('住所に該当する配送料の番号を入力してください。（1:本州、2:離島）>'))
+                    conn = sql_execute()
+                    cur = conn.cursor(pymysql.cursors.DictCursor)
+                    cur.execute("USE shopping_cart")
+                    conn.commit()
+                    h = "select 配送料管理番号,地域 from 配送料一覧"
+                    cur.execute(h)
+                    hlist = cur.fetchall()
+                    conn.commit()
+                    cur.close()
+                    conn.close()
+                    for hh in hlist:
+                        hhlist= []
+                        hnum,area = hh.values()
+                        hhlist.append(hnum)
+                        hhlist.append(area)
+                        print(str(hhlist[0]) + ':' + hhlist[1])
+                    haisouryou = int(input('住所に該当する配送料の番号を入力してください。>'))
                 except ValueError as ve:
                     print('数字以外を入力しています。もう一度入力してください。')
                 else:
-                    haisouryoustr = str(haisouryou)
-                    resulthaisouryou = haisouryoustr
-                    haisoukaku =  input('間違いないですか？（1:はい　2:いいえ）')
-                    if haisoukaku == '1':
-                        cus_list[7] = resulthaisouryou
-                        break
+                    hhlist= []
+                    for hh in hlist:
+                        hnum,area = hh.values()
+                        hhlist.append(hnum)
+                        hhlist.append(area)
+                    if haisouryou in hhlist:
+                        haisouryoustr = str(haisouryou)
+                        resulthaisouryou = haisouryoustr
+                        haisoukaku =  input('間違いないですか？（1:はい　2:いいえ）')
+                        if haisoukaku == '1':
+                            cus_list[7] = resulthaisouryou
+                            break
+                        else:
+                            print('入力しなおしてください。')
                     else:
-                        print('入力しなおしてください。')
+                        print('正しいメニュー番号を入力してください。')
             elif henkou == '8':
                 mail = input('メールアドレス（半角英数字80文字以内）>')
                 mailnum = mail.replace('.','').replace(',','').replace('-','').replace('@','')
@@ -208,7 +232,7 @@ def henkou(x):
                 cur.execute("USE shopping_cart")
                 conn.commit()
 
-                update = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料ID,メールアドレス,ログインID,ログインパスワード)\
+                update = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード)\
                      values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cur.execute(update,[cus_list[1],cus_list[2],cus_list[3],cus_list[4],cus_list[5],cus_list[6],cus_list[7],cus_list[8],cus_list[9],cus_list[10]])
                 conn.commit()

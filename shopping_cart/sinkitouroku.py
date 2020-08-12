@@ -11,7 +11,7 @@ def sinkitouroku():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("USE shopping_cart")
     conn.commit()
-    cus = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料ID,メールアドレス,ログインID,ログインパスワード) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    cus = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 
     cur.execute(cus,result)

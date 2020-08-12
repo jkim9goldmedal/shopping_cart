@@ -4,7 +4,7 @@ def add_cart(x):
     add = 0
     while add < 1:
         sum = 0
-        a = input('購入する商品番号を入力してください。購入しない場合はNGを入力>')
+        a = input('カートに追加する、もしくはカートから減らしたい商品番号を入力してください。変更しない場合はNGを入力>')
         bangoukaku = input(a + 'で間違いないですか？（1:はい 2:いいえ）>')
         if bangoukaku == '1':
             if a == 'NG':
@@ -17,7 +17,7 @@ def add_cart(x):
                 conn.commit()
                 d = "select 商品番号,商品名,商品詳細,税込販売単価,税抜販売単価,税込商品割引価格,税抜商品割引価格,税込カテゴリー割引価格,税抜カテゴリー割引価格,税込均一価格,税抜均一単価,在庫数,割引フラグ,商品カテゴリー番号\
                     from 商品在庫一覧\
-                    where 商品番号 = %s and 在庫数 > 0"
+                    where 商品番号 = %s and 在庫数 > 0 and 削除フラグ = 0"
                 cur.execute(d,a)
                 rows = cur.fetchall()
                 conn.commit()
@@ -31,7 +31,7 @@ def add_cart(x):
                         sum = sum + 1
                         try:
                             print('==========')
-                            b = int(input('購入する数量を入力してください。>'))
+                            b = int(input('カートに追加する数量、減らしたい数量を入力してください。(追加の場合:2 減らす場合:-2)>'))
                             kazukaku = input(str(b) + '個で間違いないですか？（1:はい 2:いいえ）>')
                             if kazukaku =='1':
                                 if b > 5:

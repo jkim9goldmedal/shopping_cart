@@ -3,7 +3,7 @@ def kinitu_hyouzi(item_list):
     from execute import sql_execute
     item_list[9]
     item_list[9] = round(item_list[9])
-    print('【セール】')
+    print('【セール】',end = '/')
     print(item_list[0],end = '/')
     print(item_list[1],end = '/')
     print(item_list[2],end = '/')
