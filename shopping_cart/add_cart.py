@@ -4,10 +4,10 @@ def add_cart(x):
     add = 0
     while add < 1:
         sum = 0
-        a = input('カートに追加する、もしくはカートから減らしたい商品番号を入力してください。変更しない場合はNGを入力>')
+        a = input('カートに追加する、もしくはカートから減らしたい商品番号を入力してください。変更しない場合は半角数字の「0」を入力>')
         bangoukaku = input(a + 'で間違いないですか？（1:はい 2:いいえ）>')
         if bangoukaku == '1':
-            if a == 'NG':
+            if a == '0':
                 add += 1
                 break
             else:
@@ -17,7 +17,7 @@ def add_cart(x):
                 conn.commit()
                 d = "select 商品番号,商品名,商品詳細,税込販売単価,税抜販売単価,税込商品割引価格,税抜商品割引価格,税込カテゴリー割引価格,税抜カテゴリー割引価格,税込均一価格,税抜均一単価,在庫数,割引フラグ,商品カテゴリー番号\
                     from 商品在庫一覧\
-                    where 商品番号 = %s and 在庫数 > 0 and 削除フラグ = 0"
+                    where 商品番号 = %s and 削除フラグ = 0"
                 cur.execute(d,a)
                 rows = cur.fetchall()
                 conn.commit()
@@ -27,140 +27,156 @@ def add_cart(x):
                     cart_list = []
                     for k in row.values():
                         cart_list.append(k)
-                    if a == cart_list[0]:
+                    if cart_list[11] <= 0:
+                        print('在庫がありません。やり直してください。')
+                        sum += 1
+                    elif a == cart_list[0]:
                         sum = sum + 1
-                        try:
-                            print('==========')
-                            b = int(input('カートに追加する数量、減らしたい数量を入力してください。(追加の場合:2 減らす場合:-2)>'))
-                            kazukaku = input(str(b) + '個で間違いないですか？（1:はい 2:いいえ）>')
-                            if kazukaku =='1':
-                                if b > 5:
-                                    print('==========')
-                                    print('カートに追加できるのは5個までです。入力しなおしてください。')
-                                elif b == 0:
-                                    print('==========')
-                                    print('0でない数を入力してください。')
-                                else:
-                                    if b <= cart_list[11]:
-                                        zaiko = 0
-                                        sum2 = 0
-                                        conn = sql_execute()
-                                        cur = conn.cursor(pymysql.cursors.DictCursor)
-                                        cur.execute("USE shopping_cart")
-                                        conn.commit()
-                                        e = "select 商品番号,数量 from カート where ログインID = %s"
-                                        cur.execute(e,x)
-                                        rows2 = cur.fetchall()
-                                        conn.commit()
-                                        cur.close()
-                                        conn.close()
-                                        for row2 in rows2:
-                                            list = []
-                                            for k in row2.values():
-                                                list.append(k)
-                                            if cart_list[0] == list[0]:
-                                                sum2 = sum2 + 1
-                                                zaiko = b + list[1]
-                                                if zaiko <= 5 and zaiko > 0:
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    f = "UPDATE カート set 数量 = %s where 商品番号 = %s and ログインID = %s"
-                                                    cur.execute(f,[zaiko,cart_list[0],x])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートに追加しました。')
-                                                    add = add + 1
-                                                elif zaiko > 5:
-                                                    print('==========')
-                                                    print('カートに入れられる商品は5個までです。入力しなおしてください。')
-                                                elif zaiko <= 0:
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    g = "delete from カート where 商品番号 = %s and ログインID = %s"
-                                                    cur.execute(g,[cart_list[0],x])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートの商品数が0になったのでカートから削除します。')
-                                                    add = add + 1
-                                        if sum2 == 0:
-                                            if b < 0:
-                                                print('==========')
-                                                print('カートにない商品は減らせません。入力しなおしてください。')
-                                            else:
-                                                if cart_list[12] == '0':
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    h = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
-                                                    cur.execute(h,[x,cart_list[0],b,cart_list[3],cart_list[4]])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートに追加しました。')
-                                                    add = add + 1
-                                                elif cart_list[12] == '1':
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    i = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
-                                                    cur.execute(i,[x,cart_list[0],b,cart_list[5],cart_list[6]])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートに追加しました。')
-                                                    add = add + 1
-                                                elif cart_list[12] == '2':
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    j = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
-                                                    cur.execute(j,[x,cart_list[0],b,cart_list[7],cart_list[8]])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートに追加しました。')
-                                                    add = add + 1
-                                                elif cart_list[12] == '3':
-                                                    conn = sql_execute()
-                                                    cur = conn.cursor(pymysql.cursors.DictCursor)
-                                                    cur.execute("USE shopping_cart")
-                                                    conn.commit()
-                                                    k = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
-                                                    cur.execute(k,[x,cart_list[0],b,cart_list[9],cart_list[10]])
-                                                    conn.commit()
-                                                    cur.close()
-                                                    conn.close()
-                                                    print('==========')
-                                                    print('カートに追加しました。')
-                                                    add = add + 1
+                        numf = 0
+                        while numf < 1:
 
-                                        break
-                                    else:
-                                        print('==========')
-                                        print('在庫がありません。入力しなおしてください。')
-                                        sum += 1
-                            elif kazukaku == '2':
+                            try:
                                 print('==========')
-                                print('入力しなおしてください。')
-                        except ValueError as ve:
-                            print('==========')
-                            print('入力内容が間違っています。もう一度入力してください。')
+                                b = int(input('カートに追加する数量、減らしたい数量を入力してください。\n新規に購入する場合:購入したい数字\nカートにある商品の数を増やす場合:増やしたい数字\nカートにある商品の数を減らす場合:減らしたい数字(-数字)\n>'))
+                                kazukaku = input(str(b) + '個で間違いないですか？（1:はい 2:いいえ）>')
+                                if kazukaku =='1':
+                                    if b > 5:
+                                        print('==========')
+                                        print('カートに追加できるのは5個までです。入力しなおしてください。')
+                                    elif b == 0:
+                                        print('==========')
+                                        print('0でない数を入力してください。')
+                                    else:
+                                        if b <= cart_list[11]:
+                                            zaiko = 0
+                                            sum2 = 0
+                                            conn = sql_execute()
+                                            cur = conn.cursor(pymysql.cursors.DictCursor)
+                                            cur.execute("USE shopping_cart")
+                                            conn.commit()
+                                            e = "select 商品番号,数量 from カート where ログインID = %s"
+                                            cur.execute(e,x)
+                                            rows2 = cur.fetchall()
+                                            conn.commit()
+                                            cur.close()
+                                            conn.close()
+                                            for row2 in rows2:
+                                                list = []
+                                                for k in row2.values():
+                                                    list.append(k)
+                                                if cart_list[0] == list[0]:
+                                                    sum2 = sum2 + 1
+                                                    zaiko = b + list[1]
+                                                    if zaiko <= 5 and zaiko > 0:
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        f = "UPDATE カート set 数量 = %s where 商品番号 = %s and ログインID = %s"
+                                                        cur.execute(f,[zaiko,cart_list[0],x])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートに追加しました。')
+                                                        numf += 1
+                                                        add = add + 1
+                                                    elif zaiko > 5:
+                                                        print('==========')
+                                                        print('カートに入れられる商品は5個までです。入力しなおしてください。')
+                                                    elif zaiko <= 0:
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        g = "delete from カート where 商品番号 = %s and ログインID = %s"
+                                                        cur.execute(g,[cart_list[0],x])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートの商品数が0になったのでカートから削除します。')
+                                                        numf += 1
+                                                        add = add + 1
 
+                                            if sum2 == 0:
+                                                if b < 0:
+                                                    print('==========')
+                                                    print('カートにない商品は減らせません。入力しなおしてください。')
+                                                else:
+                                                    if cart_list[12] == '0':
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        h = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
+                                                        cur.execute(h,[x,cart_list[0],b,cart_list[3],cart_list[4]])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートに追加しました。')
+                                                        numf += 1
+                                                        add = add + 1
+                                                    elif cart_list[12] == '1':
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        i = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
+                                                        cur.execute(i,[x,cart_list[0],b,cart_list[5],cart_list[6]])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートに追加しました。')
+                                                        numf += 1
+                                                        add = add + 1
+                                                    elif cart_list[12] == '2':
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        j = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
+                                                        cur.execute(j,[x,cart_list[0],b,cart_list[7],cart_list[8]])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートに追加しました。')
+                                                        numf += 1
+                                                        add = add + 1
+                                                    elif cart_list[12] == '3':
+                                                        conn = sql_execute()
+                                                        cur = conn.cursor(pymysql.cursors.DictCursor)
+                                                        cur.execute("USE shopping_cart")
+                                                        conn.commit()
+                                                        k = "insert into カート(ログインID,商品番号,数量,税込価格,税抜価格) values(%s,%s,%s,%s,%s)"
+                                                        cur.execute(k,[x,cart_list[0],b,cart_list[9],cart_list[10]])
+                                                        conn.commit()
+                                                        cur.close()
+                                                        conn.close()
+                                                        print('==========')
+                                                        print('カートに追加しました。')
+                                                        numf += 1
+                                                        add = add + 1
 
-        if sum == 0 or bangoukaku =='2':
+                                            break
+                                        else:
+                                            print('==========')
+                                            print('在庫がありません。入力しなおしてください。現在庫数は' + str(cart_list[11]) + '個です。')
+                                            sum += 1
+                                elif kazukaku == '2':
+                                    print('==========')
+                                    print('入力しなおしてください。')
+                                else:
+                                    print('正しい数字を入力してください。')
+                            except ValueError as ve:
+                                print('==========')
+                                print('入力内容が間違っています。もう一度入力してください。')
+
+        elif bangoukaku == '2':
+            print('入力しなおしてください。')
+        if sum == 0:
             print('==========')
             print('入力内容が間違っているか、商品番号が間違っています。\nもう一度商品番号から入力してください。')

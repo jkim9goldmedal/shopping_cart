@@ -72,6 +72,7 @@ def search_show():
             conn.close()
 
             print('商品番号/商品名/商品詳細/税込価格')
+            print('========================================')
             for k in rows2:
                 item_list = []
                 for x in k.values():
@@ -127,6 +128,7 @@ def search_show():
             cur.close()
             conn.close()
             print('商品番号/商品名/商品詳細/税込価格')
+            print('========================================')
             for k in rows3:
                 item_list = []
                 for x in k.values():
@@ -157,7 +159,7 @@ def search_show():
         elif choice == '3':
             sum2 = 0
             while sum2 < 1:
-                namedet_search = input('商品詳細を入力してください。(文字を含んでいれば検索可能、何も入力しなければ全商品が表示されます。) >')
+                namedet_search = input('商品詳細を入力してください。 >')
                 kaku = input(namedet_search + 'で間違いないですか？（1:はい　2:いいえ）>')
                 if kaku =='1':
                     sum2 = sum2 + 1

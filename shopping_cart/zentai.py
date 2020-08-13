@@ -44,7 +44,7 @@ def shopping_cart():
                         import search_show
                         search_show.search_show()
                         print('==========')
-                        sentaku = input('行いたい処理を選択してください。（1:カート追加・変更に進む\n2:メインメニューに戻ってショッピングを続ける\n3:終了する・ログアウト）>')
+                        sentaku = input('行いたい処理を選択してください。\n1:カート追加・変更に進む\n2:メインメニューに戻ってショッピングを続ける\n3:終了する・ログアウト\n>')
                         if sentaku == '1':#カート追加
                             stop3 = 0
                             while stop3 < 1:
@@ -54,7 +54,7 @@ def shopping_cart():
                                 import add_cart
                                 add_cart.add_cart(x)
                                 print('==========')
-                                sentaku2 = input('行いたい処理を選択してください。（1:カートの中身を表示する\n2:このままカートの追加・変更を行う\n3:商品検索に戻る\n4:メインメニューに戻ってショッピングを続ける\n5:終了する・ログアウト）>')
+                                sentaku2 = input('行いたい処理を選択してください。\n1:カートの中身を表示する\n2:このままカートの追加・変更を行う\n3:商品検索に戻る\n4:メインメニューに戻ってショッピングを続ける\n5:終了する・ログアウト\n>')
                                 if sentaku2 == '1':#購入予定明細：済み
                                     stop4 = 0
                                     while stop4 < 1:
@@ -71,7 +71,7 @@ def shopping_cart():
                                             import cart_meisai
                                             cart_meisai.cart_meisai(x)
                                             print('==========')
-                                            sentaku3 = input('行いたい処理を選択してください。（1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト）>')
+                                            sentaku3 = input('行いたい処理を選択してください。\n1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト\n>')
                                             if sentaku3 == '1':#購入する:済み
                                                 import zaikocheck
                                                 check = zaikocheck.zaikocheck(x)
@@ -201,7 +201,7 @@ def shopping_cart():
                             import cart_meisai
                             cart_meisai.cart_meisai(x)
                             print('==========')
-                            sentaku3 = input('行いたい処理を選択してください。（1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト）>')
+                            sentaku3 = input('行いたい処理を選択してください。\n1:購入する\n2:カート内の数量を変更する\n3:メインメニューに戻ってショッピングを続ける\n4:終了・ログアウト\n>')
                             if sentaku3 == '1':#購入する:済み
                                 import zaikocheck
                                 check = zaikocheck.zaikocheck(x)
@@ -230,7 +230,7 @@ def shopping_cart():
                                     import add_cart
                                     add_cart.add_cart(x)
                                     print('==========')
-                                    sentaku2 = input('行いたい処理を選択してください。（1:カートの中身を表示する\n2:もう一度商品を追加する\n3:メインメニューに戻ってショッピングを続ける\n4:終了する（ログアウト））>')
+                                    sentaku2 = input('行いたい処理を選択してください。\n1:カートの中身を表示する\n2:もう一度商品を追加する\n3:メインメニューに戻ってショッピングを続ける\n4:終了する（ログアウト）\n>')
                                     if sentaku2 == '1':
                                         stopstop += 1
                                     elif sentaku2 == '2':

@@ -8,7 +8,7 @@ def henkou(x):
         cur = conn.cursor(pymysql.cursors.DictCursor)
         cur.execute("USE shopping_cart")
         conn.commit()
-        a = "select id,名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード\
+        a = "select id,名前,カナ,郵便番号,住所,電話番号,配送料管理番号,メールアドレス,ログインID,ログインパスワード\
             from 【ログイン用】顧客一覧\
             where ログインID = %s"
 
@@ -39,7 +39,7 @@ def henkou(x):
         # henkounaiyou = input('変更後の内容を入力してください。>')
 
         while True:
-            henkou = input('変更したい項目を入力してください。\n1:名前\n2:カナ\n3:郵便番号\n4:住所\n5:電話番号\n6:顧客ランク\n7:配送料管理番号\n8:メールアドレス\n9:ログインパスワード\n>')
+            henkou = input('変更したい項目を入力してください。\n1:名前\n2:カナ\n3:郵便番号\n4:住所\n5:電話番号\n6:配送料管理番号\n7:メールアドレス\n8:ログインパスワード\n>')
             if henkou == '1':
                 name = input('名前（40文字以内）>')
                 checkname = len(name)
@@ -123,21 +123,8 @@ def henkou(x):
                             print('入力しなおしてください。')
                     else:
                         print('入力文字数が間違っています。もう一度入力してください。')
+
             elif henkou == '6':
-                try:
-                    cusrank = int(input('優良顧客ですか？(1:はい　2:いいえ)>'))
-                except ValueError as ve:
-                    print('数字以外を入力しています。もう一度入力してください。')
-                else:
-                    cusrankstr = str(cusrank)
-                    resultcusrank = cusrankstr
-                    cusrankkaku = input('間違いないですか？（1:はい　2:いいえ）')
-                    if cusrankkaku == '1':
-                        cus_list[6] = resultcusrank
-                        break
-                    else:
-                        print('入力しなおしてください。')
-            elif henkou == '7':
                 try:
                     conn = sql_execute()
                     cur = conn.cursor(pymysql.cursors.DictCursor)
@@ -169,13 +156,13 @@ def henkou(x):
                         resulthaisouryou = haisouryoustr
                         haisoukaku =  input('間違いないですか？（1:はい　2:いいえ）')
                         if haisoukaku == '1':
-                            cus_list[7] = resulthaisouryou
+                            cus_list[6] = resulthaisouryou
                             break
                         else:
                             print('入力しなおしてください。')
                     else:
                         print('正しいメニュー番号を入力してください。')
-            elif henkou == '8':
+            elif henkou == '7':
                 mail = input('メールアドレス（半角英数字80文字以内）>')
                 mailnum = mail.replace('.','').replace(',','').replace('-','').replace('@','')
                 checkmail = len(mail)
@@ -200,7 +187,7 @@ def henkou(x):
                         resultmail = mail
                         mailkaku = input('間違いないですか？（1:はい　2:いいえ）')
                         if mailkaku == '1':
-                            cus_list[8] = resultmail
+                            cus_list[7] = resultmail
                             break
                         else:
                             print('入力しなおしてください。')
@@ -208,14 +195,14 @@ def henkou(x):
                         print('入力文字数が間違っています。もう一度入力してください。')
                 else:
                     print('このメールアドレスは使用できません')
-            elif henkou == '9':
+            elif henkou == '8':
                 password = input('パスワード（半角英数字5文字以上10文字以内）>')
                 checkpassword = len(password)
                 if password.isalnum() and 5 <= checkpassword <= 10:
 
                     passkaku = input('間違いないですか？（1:はい　2:いいえ）')
                     if passkaku == '1':
-                        cus_list[10] = password
+                        cus_list[9] = password
                         break
                     else:
                         print('入力しなおしてください。')
@@ -234,7 +221,7 @@ def henkou(x):
 
                 update = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード)\
                      values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                cur.execute(update,[cus_list[1],cus_list[2],cus_list[3],cus_list[4],cus_list[5],cus_list[6],cus_list[7],cus_list[8],cus_list[9],cus_list[10]])
+                cur.execute(update,[cus_list[1],cus_list[2],cus_list[3],cus_list[4],cus_list[5],cus_list[6],cus_list[7],cus_list[8],cus_list[9]])
                 conn.commit()
                 cur.close()
                 conn.close()

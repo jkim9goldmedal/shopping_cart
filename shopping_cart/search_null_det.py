@@ -8,7 +8,7 @@ def search_null_det(result):
 
     c = "select count(商品番号)\
         from 商品在庫一覧\
-        where 商品詳細 like %s and 在庫数 > 0 where 削除フラグ = 0"
+        where 商品詳細 like %s and 在庫数 > 0 and 削除フラグ = 0"
     cur.execute(c,result)
     rows3 = cur.fetchall()
     conn.commit()
