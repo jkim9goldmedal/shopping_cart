@@ -5,7 +5,7 @@ def rireki(x):
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("USE shopping_cart")
     conn.commit()
-    a = "select 受注.id,名前,受注日,受注.ログインID,税込合計金額,税抜合計金額,税込送料込合計額,税込配送料,税抜配送料\
+    a = "select 受注.id,名前,受注日,受注.ログインID,case when 受注.削除フラグ = 1 then 税込合計金額*(-1) else 税込合計金額 end as 税込合計金額,case when 受注.削除フラグ = 1 then 税抜合計金額*(-1) else 税抜合計金額 end as 税抜合計金額,case when 受注.削除フラグ = 1 then 税込送料込合計額*(-1) else 税込送料込合計額 end as 税込送料込合計額,case when 受注.削除フラグ = 1 then 税込配送料*(-1) else 税込配送料 end as 税込配送料,case when 受注.削除フラグ = 1 then 税抜配送料*(-1) else 税抜配送料 end as 税抜配送料\
         from 受注 inner join 顧客一覧 on 受注.ログインID = 顧客一覧.ログインID\
         where 受注.ログインID = %s"
     cur.execute(a,x)
