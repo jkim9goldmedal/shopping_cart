@@ -219,7 +219,7 @@ def henkou(x):
                 cur.execute("USE shopping_cart")
                 conn.commit()
 
-                update = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,顧客ランク,配送料管理番号,メールアドレス,ログインID,ログインパスワード)\
+                update = "insert into 顧客(名前,カナ,郵便番号,住所,電話番号,配送料管理番号,メールアドレス,ログインID,ログインパスワード)\
                      values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cur.execute(update,[cus_list[1],cus_list[2],cus_list[3],cus_list[4],cus_list[5],cus_list[6],cus_list[7],cus_list[8],cus_list[9]])
                 conn.commit()
